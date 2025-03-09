@@ -1,0 +1,32 @@
+{
+  "name": "auth-service",
+  "version": "1.0.0",
+  "description": "Node authentication service for AWS Cognito",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon --legacy-watch --watch ./src --ext ts --exec \"npx tsx --inspect=0.0.0.0:9229 src/index.ts\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-jwt-verify": "^5.0.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "jwt-decode": "^4.0.0",
+    "node-cron": "^3.0.3",
+    "openid-client": "^6.3.3"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.10",
+    "@types/node-cron": "^3.0.11",
+    "nodemon": "^3.1.9",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
