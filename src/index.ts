@@ -27,6 +27,8 @@ const port = process.env.PORT || 3010;
 app.get("/login", async (req: Request, res: Response): Promise<void> => {
   const loginFlowResponse = await AuthenticationService.initiateLoginFlow(res);
   if (loginFlowResponse.status === ServiceStatus.SUCCESS && loginFlowResponse.data) {
+    const state = req.query.state as string | undefined;
+    state ? res.cookie("auth_state", encodeURIComponent(state), { httpOnly: true, secure: true, sameSite: "lax" }) : res.clearCookie("auth_state");
     res.redirect(loginFlowResponse.data);
     return;
   }
@@ -39,8 +41,14 @@ app.get("/login", async (req: Request, res: Response): Promise<void> => {
  * Handles the redirect from Cognito, exchanges the code for tokens,
  * stores the tokens in secure cookies, and clears the temporary PKCE cookies.
  */
-app.get("/", async (req: Request, res: Response): Promise<void> => {
+app.get("/callback", async (req: Request, res: Response): Promise<void> => {
+  const state = req.cookies.auth_state ? decodeURIComponent(req.cookies.auth_state) : undefined;
+  res.clearCookie("auth_state");
   const tokenExchangeResponse = await AuthenticationService.exchangeCodeForTokens(req, res);
+  if (tokenExchangeResponse.status === ServiceStatus.SUCCESS) {    
+    state ? res.redirect(state) : res.redirect("/");
+    return;
+  }
   res.status(tokenExchangeResponse.statusCode).send(tokenExchangeResponse.data || tokenExchangeResponse.message);
 });
 

@@ -31,7 +31,7 @@ class SessionManager {
   }
 
   purgeExpiredSessions(): void {
-    const now = Math.floor(Date.now() / 1000); // current time in seconds
+    const now = Math.floor(Date.now() / 1000);
     for (const [sessionId, sessionData] of this.sessions.entries()) {
       try {
         const decoded: JwtPayload = jwtDecode(sessionData.access_token);
@@ -75,7 +75,7 @@ export class AuthenticationService {
         scope: "openid email",
         code_challenge,
         code_challenge_method,
-        nonce: "",
+        nonce: ""
       };
 
       if (!this.openId.serverMetadata().supportsPKCE()) {
@@ -142,7 +142,11 @@ export class AuthenticationService {
       };
     } catch (error) {
       console.error("Error in /callback:", error);
-      return { message: "Error during token exchange", status: ServiceStatus.SERVER_ERROR, statusCode: 500 };
+      return {
+        message: "Error during token exchange",
+        status: ServiceStatus.SERVER_ERROR,
+        statusCode: 500,
+      };
     }
   }
 
